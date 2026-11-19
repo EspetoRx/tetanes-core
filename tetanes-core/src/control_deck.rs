@@ -691,6 +691,9 @@ impl ControlDeck {
             Mapper::Txrom(mapper) => {
                 mapper.set_revision(self.mapper_revisions.mmc3);
             }
+            Mapper::Mapper37(mapper) => {
+                mapper.mmc3.set_revision(self.mapper_revisions.mmc3);
+            }
             Mapper::Bf909x(mapper) => {
                 mapper.set_revision(self.mapper_revisions.bf909);
             }

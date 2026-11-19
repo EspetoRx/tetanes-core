@@ -750,6 +750,9 @@ boards! {
     Fk23C(Fk23C) = 176 in m176_fk23c { 176 => Fk23C::load(cart) },
     /// `BMC 1200-in-1` (Mapper 227)
     Mapper227(Mapper227) = 227 in m227_1200in1 { 227 => Mapper227::load(cart) },
+    /// `MMC3 Multicart` (Mapper 037)
+    Mapper37(Mapper37) = 37 in m037_mmc3_multicart { 37 => Mapper37::load(cart) },
+
 }
 
 impl Default for Mapper {
