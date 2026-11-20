@@ -67,6 +67,11 @@ use std::{
 use thiserror::Error;
 use tracing::{error, info};
 
+// Log auxiliar mantido para compatibilidade com control_deck.rs
+pub(crate) fn log_debug(msg: &str) {
+    info!("{msg}");
+}
+
 /// Result returned from [`ControlDeck`] methods.
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -724,7 +729,14 @@ impl ControlDeck {
             | Mapper::Nina003006(_)
             | Mapper::NesEvent(_)
             | Mapper::Fk23C(_)
-            | Mapper::Mapper227(_) => (),
+            | Mapper::Mapper227(_)
+            | Mapper::Mapper57(_)
+            | Mapper::Mapper184(_)
+            | Mapper::Mapper51(_)
+            | Mapper::Mapper52(_)
+            | Mapper::M230(_)
+            | Mapper::Mapper83(_)
+             => (),
         }
     }
 
@@ -1715,7 +1727,7 @@ impl ControlDeck {
 
     /// Enable [`Zapper`](crate::input::Zapper) gun.
     #[inline]
-    pub const fn connect_zapper(&mut self, enabled: bool) {
+    pub fn connect_zapper(&mut self, enabled: bool) {
         self.bus.input.connect_zapper(enabled);
     }
 
@@ -1873,8 +1885,14 @@ impl ControlDeck {
         }
     }
 
-    /// Resets the console.
+        /// Resets the console.
     pub fn reset(&mut self, kind: ResetKind) {
+        let rom_name = self.loaded_rom.as_ref().map(|r| r.name.as_str());
+        let frame = self.frame_number();
+        info!("ControlDeck::reset: kind={kind:?}, frame={frame}, loaded_rom={rom_name:?}");
+        log_debug(&format!(
+            "[ControlDeck::reset] kind={kind:?} frame={frame} rom={rom_name:?}"
+        ));
         self.bus.reset(kind);
         self.video_frame_stale = true;
         if let Some(frames) = &mut self.run_ahead_frames {
@@ -1884,6 +1902,7 @@ impl ControlDeck {
             self.running = true;
         }
     }
+
 }
 
 /// Clocking methods superseded by [`ControlDeck::clock_frame`] plus the output accessors.

@@ -752,7 +752,17 @@ boards! {
     Mapper227(Mapper227) = 227 in m227_1200in1 { 227 => Mapper227::load(cart) },
     /// `MMC3 Multicart` (Mapper 037)
     Mapper37(Mapper37) = 37 in m037_mmc3_multicart { 37 => Mapper37::load(cart) },
-
+    /// `Mapper 057` (Multicart)
+    Mapper57(Mapper57) = 57 in m057_mapper57 { 57 => Mapper57::load(cart) },
+    /// `Mapper 184` (Sunsoft-1)
+    Mapper184(Mapper184) = 184 in m184_mapper184 { 184 => Mapper184::load(cart) },
+    /// `Mapper 51` (Multicart 11-in-1)
+    Mapper51(Mapper51) = 51 in m051_mapper51 { 51 => Mapper51::load(cart) },
+    /// `Realtec 8213` / MMC3 multicart (Mapper 052)
+    Mapper52(Mapper52) = 52 in m052_realtec8213 { 52 => Mapper52::load(cart) },
+    M230(M230) = 230 in m230_22in1 { 230 => M230::load(cart) },
+    /// `Mapper 083` (Cony / Yoko multicart & single-game)
+    Mapper83(Mapper83) = 83 in m083_mapper83 { 83 => Mapper83::load(cart) },
 }
 
 impl Default for Mapper {

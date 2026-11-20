@@ -31,7 +31,8 @@ use crate::{
 use bitflags::bitflags;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self};
-use tracing::trace;
+use std::sync::atomic::{AtomicU32, Ordering};
+use tracing::{trace, warn};
 
 pub mod instr;
 
@@ -1267,6 +1268,50 @@ impl Bus {
         self.trace_instr();
 
         let prev_pc = self.cpu.pc;
+
+        static BF63_LOG_COUNT: AtomicU32 = AtomicU32::new(0);
+        if (0xBF50..=0xBF80).contains(&prev_pc) {
+            let n = BF63_LOG_COUNT.fetch_add(1, Ordering::Relaxed);
+            if n < 32 {
+                let mut dis_pc = prev_pc;
+                let dis = self.disassemble(&mut dis_pc).to_string();
+                let nmi_vec = self.peek_word(Cpu::NMI_VECTOR);
+                let rst_vec = self.peek_word(Cpu::RESET_VECTOR);
+                let mem_bf58 = [
+                    self.peek(0xBF58),
+                    self.peek(0xBF59),
+                    self.peek(0xBF5A),
+                    self.peek(0xBF5B),
+                    self.peek(0xBF5C),
+                    self.peek(0xBF5D),
+                    self.peek(0xBF5E),
+                    self.peek(0xBF5F),
+                    self.peek(0xBF60),
+                    self.peek(0xBF61),
+                    self.peek(0xBF62),
+                    self.peek(0xBF63),
+                    self.peek(0xBF64),
+                    self.peek(0xBF65),
+                    self.peek(0xBF66),
+                    self.peek(0xBF67),
+                ];
+                warn!(
+                    "[bf63 #{n}] {dis} | A={:02X} X={:02X} Y={:02X} SP={:02X} P={:02X} | ppu=({},{}) nmi_en={} vbl={} nmi_pend={} mask={} | vecs=({nmi_vec:04X},{rst_vec:04X}) | $BF58={mem_bf58:02X?}",
+                    self.cpu.acc,
+                    self.cpu.x,
+                    self.cpu.y,
+                    self.cpu.sp,
+                    self.cpu.status.bits(),
+                    self.ppu.scanline,
+                    self.ppu.cycle,
+                    self.ppu.ctrl_nmi_enabled,
+                    self.ppu.status_in_vblank,
+                    self.ppu.nmi_pending,
+                    self.ppu.mask_rendering_enabled,
+                );
+            }
+        }
+
         if let Some(history) = &mut self.pc_history {
             history.push(prev_pc);
         }
