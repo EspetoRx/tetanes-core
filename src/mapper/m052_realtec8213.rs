@@ -17,15 +17,22 @@ use serde::{Deserialize, Serialize};
 /// - Bits `1..=0`: PRG outer bank bits
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Mapper52 {
+    /// Underlying MMC3 state.
     pub mmc3: Mmc3,
+    /// Current nametable mirroring.
     pub mirroring: Mirroring,
+    /// Whether cartridge WRAM is enabled.
     pub wram_enabled: bool,
+    /// Whether cartridge WRAM accepts writes.
     pub wram_writable: bool,
+    /// Multicart outer-bank selection register.
     pub outer_reg: u8,
+    /// Whether the outer-bank register is locked until reset.
     pub locked: bool,
 }
 
 impl Mapper52 {
+    /// Loads a Mapper 052 board from the given cartridge.
     pub fn load(cart: &mut Cart) -> Result<Mapper, mapper::Error> {
         let mut board = Self {
             mmc3: Mmc3::default(),

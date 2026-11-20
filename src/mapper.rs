@@ -237,7 +237,7 @@ macro_rules! boards {
             $($num:pat $(if $guard:expr)? => $load:expr),+ $(,)?
         }
     ),+ $(,)?) => {
-        $(pub mod $module;)+
+        $(#[doc = "Mapper board implementation."] pub mod $module;)+
         $(pub use $module::$variant;)+
 
         /// A `Mapper` is a specific cart variant with dedicated memory mapping logic for memory
@@ -253,7 +253,7 @@ macro_rules! boards {
         pub enum Mapper {
             /// No board, i.e. no cart loaded. Reads come back as open bus.
             None(()),
-            $($(#[$meta])* $variant($($storage)+),)+
+            $(#[doc = "Mapper board variant."] $(#[$meta])* $variant($($storage)+),)+
         }
 
         impl Mapper {
