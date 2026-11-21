@@ -1,5 +1,7 @@
 <!-- markdownlint-disable no-inline-html no-duplicate-heading -->
 
+> **Uso no Emmu:** este submódulo é o núcleo NES usado por `crates/emmu-nes` no navegador. O workspace raiz aplica `[patch.crates-io] tetanes-core = { path = "crates/tetanes-core" }`. O wrapper expõe `ControlDeck` via WASM com frames 256×240, áudio mono 48 kHz, um jogador e save states. No desktop, NES roda no Mesen. Licença: **MIT OR Apache-2.0** (`LICENSE-MIT`, `LICENSE-APACHE`), `Copyright (c) 2021 Luke Petherbridge <me@lukeworks.tech>`. A documentação abaixo é a do projeto upstream.
+
 # TetaNES Core
 
 [![Build Status]][build] [![Doc Status]][docs] [![Latest Version]][crates.io]
